@@ -229,7 +229,6 @@ int add_file(const char *archiver, const char *new_file, int old_size){
     arc = freopen(archiver, "wb+", arc);
     if (!arc){
         perror("Erro ao reabrir archive");
-        fclose(fp_new);
         free(infos);
         return -1;
     }
@@ -237,7 +236,6 @@ int add_file(const char *archiver, const char *new_file, int old_size){
 	// Sobrescreve tudo em archiver
     if (reset_archive(arc, NULL, infos, total_infos) != 0){
         perror("Erro ao resetar archive");
-        fclose(fp_new);
         fclose(arc);
         free(infos);
         return -1;

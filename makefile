@@ -2,7 +2,7 @@
 # Sofia Wamser Lima 
 
 CC      = gcc
-CFLAGS  = -Wall -Wextra -Werror -g -std=c99
+CFLAGS  = -Wall -Wextra -g -std=c99
 LDLIBS  = -lm
 MAIN    = vinac
 BIN_DIR = swl24
