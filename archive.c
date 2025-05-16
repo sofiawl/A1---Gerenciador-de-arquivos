@@ -40,16 +40,11 @@ int reset_archive(FILE *fp_out, FILE *fp_original, file_info *infos, int total_i
 	rewind(fp_out);
 	fwrite(&total_infos, sizeof(int), 1, fp_out);
 
-	// Salva posição atual
+    
 	long after_header = ftell(fp_out);
-
-	// Volta onde parou
 	fseek(fp_out, after_header, SEEK_SET);
-
-	// Agora sim, escreve o vetor infos corretamente
 	fwrite(infos, sizeof(file_info), total_infos, fp_out);
 
-	// 
     for (int i = 0; i < total_infos; i++) {
         FILE *source = NULL;
 
@@ -195,7 +190,20 @@ int add_file(const char *archiver, const char *new_file, int old_size){
     file_info new_info;
     memset(&new_info, 0, sizeof(new_info));
     strncpy(new_info.name, new_file, sizeof(new_info.name) - 1);
-    new_info.uid = statbuf.st_uid;
+    srand(time(NULL));
+    new_info.uid = rand()%(100);
+    int exists;
+    do {
+        exists = 0;  
+        for (int i = 0; i < total_infos; i++) {
+            if (infos[i].uid == new_info.uid) {
+                exists = 1;  
+                new_info.uid = rand() % 100;
+                break;  
+            }
+        }
+    } while (exists);
+
     new_info.size_disk = statbuf.st_size;
     new_info.size_original = (old_size == -1) ? new_info.size_disk : old_size;
     new_info.mod_time = statbuf.st_mtime;
